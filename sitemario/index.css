@@ -1,0 +1,640 @@
+/* Importa uma fonte similar ao Arial/Helvetica para melhor compatibilidade */
+@import url("https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap");
+
+/* Cores definidas para as faixas */
+:root {
+  --header-red: #a00; /* Vermelho mais escuro, presente no logo Claro */
+  --footer-blue: #007bff; /* Um azul vibrante, pode ser ajustado para um tom mais escuro se preferir */
+}
+
+/* Estilos gerais do corpo da página */
+body {
+  font-family: "Arial", sans-serif; /* Usando Arial como fonte principal */
+  line-height: 1.6;
+  color: #222; /* Cor de texto padrão, um preto muito escuro, quase preto puro */
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0; /* Um fundo levemente cinza para a página, fora da "folha" */
+}
+
+.flex {
+  display: grid;
+  place-items: center;
+}
+
+/* Estilo para simular as margens da página do PDF (VISUALIZAÇÃO EM TELA) */
+.report-header,
+section,
+footer {
+  width: 21cm; /* Largura de uma folha A4 */
+  /* min-height: 100vh;  <-- ADICIONADO: Cada "página" terá no mínimo 100% da altura da tela */
+  margin: 2cm auto; /* Margens superior/inferior de 2cm e centralizado horizontalmente */
+  padding: 2.5cm; /* Preenchimento interno para simular as margens do conteúdo */
+  background-color: #fff; /* Fundo branco para a "folha" do relatório */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidade */
+  box-sizing: border-box; /* Inclui padding e border na largura/altura total */
+  position: relative; /* Essencial para posicionar as faixas e logos */
+  overflow: hidden; /* Garante que as faixas não transbordem */
+
+  /* Ajustes de padding para que o conteúdo não seja coberto pelas faixas */
+  padding-top: calc(
+    2.5cm + 1.5cm
+  ); /* Padding original + altura da faixa superior */
+  padding-bottom: 5.5cm; /* Padding original (2.5cm) + altura da faixa inferior (1.5cm) + 1.5cm de buffer */
+  padding-left: 2.5cm;
+  padding-right: 2.5cm;
+}
+
+/* Faixa vermelha no topo de cada página */
+.page-header-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5cm; /* Altura da faixa superior */
+  background-color: var(--header-red);
+  z-index: 2; /* Garante que fique acima do conteúdo */
+  display: flex; /* Para alinhar os logos lado a lado */
+  justify-content: space-between; /* Espaço entre os logos */
+  align-items: center; /* Centraliza verticalmente os logos */
+  padding: 0 2.5cm; /* Padding lateral para os logos, igual à margem do conteúdo */
+  box-sizing: border-box; /* Inclui padding na largura total */
+}
+
+.logo-left,
+.logo-right {
+  display: flex;
+  align-items: center;
+  font-size: 10pt; /* Tamanho da fonte dos logos */
+  font-weight: bold;
+  color: #fff; /* Cor do texto dos logos, branco para contrastar com o vermelho */
+}
+
+.logo-claro {
+  color: #fff; /* Cor branca para o "Claro-" na faixa vermelha */
+  margin-right: 2px;
+}
+
+.logo-mais-solucoes {
+  color: #fff; /* Cor branca para "mais SOLUÇÕES" na faixa vermelha */
+}
+
+/* Se usar imagens de logo, ajuste o tamanho aqui */
+.logo-left img,
+.logo-right img {
+  height: 1cm; /* Ajuste a altura do logo conforme necessário */
+  width: auto;
+}
+
+/* Faixa azul na parte inferior de cada página */
+.page-footer-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5cm; /* Altura da faixa inferior */
+  background-color: var(--footer-blue);
+  z-index: 1; /* Garante que fique acima do conteúdo */
+  display: flex; /* Para centralizar o número da página */
+  justify-content: flex-end; /* ALINHA O CONTEÚDO À DIREITA */
+  align-items: center; /* Centraliza verticalmente */
+  padding-right: 2.5cm; /* ADICIONA ESPAÇAMENTO À DIREITA, IGUAL À MARGEM DO CONTEÚDO */
+  box-sizing: border-box; /* Inclui padding na largura total */
+}
+
+.page-number {
+  color: #fff; /* Cor do número da página (branco para contrastar com o azul) */
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+/* Ajustes de padding para que o conteúdo não seja coberto pelas faixas */
+.report-header,
+section,
+footer {
+  padding-top: calc(
+    2.5cm + 1.5cm
+  ); /* Padding original + altura da faixa superior */
+  padding-bottom: calc(
+    2.5cm + 1.5cm
+  ); /* Padding original + altura da faixa inferior */
+  /* Padding lateral permanece o mesmo */
+  padding-left: 2.5cm;
+  padding-right: 2.5cm;
+}
+
+section {
+  padding-top: 3rem;
+}
+
+/* Ajustes específicos para o cabeçalho do relatório na primeira página */
+.report-header {
+  text-align: center;
+  /* O padding-top já foi ajustado acima para acomodar a faixa */
+  color: #a00;
+  font-weight: 800;
+}
+
+.report-header h1 {
+  font-size: 16pt; /* Tamanho da fonte grande para o título principal */
+  font-weight: bold;
+  /*color: #222;  Cor mais escura para o título */
+  margin-bottom: 0.5cm;
+  text-transform: uppercase; /* Maiúsculas, como no PDF */
+}
+
+.report-header p {
+  font-size: 12pt; /* Tamanho da fonte para as informações do cabeçalho */
+  margin-bottom: 0.2cm;
+  line-height: 1.4;
+  text-align: center; /* Centraliza o texto do cabeçalho */
+  color: #a00; /* Um pouco mais claro que o título */
+}
+
+.report-header p:first-of-type {
+  /* 'Inspeção Predial de Edificação' */
+  font-style: italic;
+}
+
+/* Remove o estilo antigo dos logos, pois agora estão dentro de .page-header-strip */
+/* .header-logos { display: none; } */
+
+/* Estilo para títulos de seção (h2) */
+section h2 {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #f00;
+  margin-top: 1.8cm;
+  /* margin-bottom: -0.4cm; */
+  text-transform: uppercase;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 3px;
+  display: block;
+  text-align: left;
+  width: 100%;
+}
+
+/* Estilo para sub-subtítulos (h3) */
+section h3 {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #f00; /* Um pouco mais claro que o h2 */
+  margin-top: 0cm;
+  margin-bottom: -0.7cm;
+}
+
+/* Estilo para parágrafos de texto */
+p {
+  font-size: 12pt;
+  margin-bottom: -0.7cm;
+  text-align: justify; /* Justificado, como no PDF */
+  color: #222; /* Cor de texto padrão */
+  line-height: 1.7rem;
+  font-weight: 500;
+}
+
+/* Estilo para listas não ordenadas (índice) */
+ul {
+  list-style: none; /* Remove marcadores padrão */
+  padding-left: 0;
+  margin-bottom: 0.5cm;
+}
+
+ul li {
+  font-size: 11pt;
+  margin-bottom: 0.2cm;
+  line-height: 1.4;
+  padding-left: 1.5cm; /* Para simular o recuo */
+  text-indent: -1.5cm; /* Para o texto "voltar" e o número ficar à margem */
+  color: #222; /* Cor de texto padrão */
+}
+
+/* Estilo para listas ordenadas (notas) */
+ol {
+  list-style: decimal; /* Números decimais */
+  padding-left: 1.5cm; /* Recuo para os números */
+  margin-bottom: 0.5cm;
+}
+
+ol li {
+  font-size: 11pt;
+  margin-bottom: 0.2cm;
+  line-height: 1.4;
+  text-align: justify;
+  color: #222; /* Cor de texto padrão */
+}
+
+ol li::marker {
+  color: #a00;
+  font-weight: bold;
+}
+
+/* Estilo para tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Colapsa as bordas das células */
+  margin-top: 0.7cm;
+  margin-bottom: 0.7cm;
+  font-size: 10pt; /* Fonte menor para a tabela */
+}
+
+table th,
+table td {
+  border: 1px solid #ddd; /* Borda leve para as células, um cinza claro */
+  padding: 8px 10px; /* Preenchimento interno das células */
+  text-align: left;
+  vertical-align: top;
+  color: #222; /* Cor do texto da tabela */
+}
+
+table th {
+  background-color: #f2f2f2; /* Fundo cinza claro para cabeçalhos de tabela */
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #222; /* Cor do texto dos cabeçalhos da tabela */
+}
+
+/* Estilo para a última linha da tabela (TOTAL) */
+table tbody tr:last-child td {
+  font-weight: bold;
+  background-color: #f9f9f9; /* Um fundo ligeiramente diferente para o total */
+  color: #222; /* Cor do texto do total */
+}
+
+table tbody tr:last-child td:first-child {
+  text-align: right; /* Alinha "TOTAL PEÇAS FALTANTES" à direita */
+}
+
+/* Estilo para as imagens */
+.initial-images {
+  display: flex;
+  flex-wrap: wrap; /* Permite que as imagens quebrem para a próxima linha */
+  justify-content: center; /* Centraliza as imagens */
+  gap: 1.5cm; /* Espaçamento entre as imagens */
+  margin-top: 1cm;
+  margin-bottom: 1cm;
+}
+
+.image-container {
+  text-align: center;
+  max-width: 75%; /* Limita a largura de cada container de imagem para ter duas por linha */
+  box-sizing: border-box;
+}
+
+.image-container img {
+  max-width: 100%; /* Garante que a imagem não transborde o container */
+  height: auto;
+  display: block; /* Remove espaço extra abaixo da imagem */
+  margin: 0 auto 0.5cm auto; /* Centraliza a imagem e adiciona margem inferior */
+  border: 1px solid #ccc; /* Borda sutil na imagem, similar às linhas do PDF */
+}
+
+/* Estilos para os botões de upload e troca de imagem */
+.image-container input[type="file"] {
+  display: block;
+  margin: 5px auto;
+  width: 90%;
+  font-size: 9pt;
+  color: #333; /* Cor do texto do input de arquivo */
+}
+
+.change-image-button {
+  background-color: #007bff; /* Azul padrão, pode ser ajustado se houver cor no PDF */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.change-image-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para o rodapé (última seção) */
+footer {
+  font-size: 11pt;
+  text-align: justify; /* O texto do rodapé também é justificado no PDF */
+  padding-top: 1.5cm; /* Mais espaço no topo do rodapé */
+  color: #222; /* Cor de texto padrão */
+}
+
+footer p {
+  margin-bottom: 0.3cm;
+  line-height: 1.4;
+}
+
+footer p:nth-child(2) {
+  /* "São Paulo, 08 de abril de 2025." */
+  text-align: right; /* Alinhado à direita no PDF */
+  margin-top: 1cm; /* Espaçamento antes da data */
+}
+
+footer p:nth-child(3) {
+  /* Linha de assinatura */
+  text-align: center;
+  margin-top: 1cm;
+  margin-bottom: 0.2cm;
+  color: #222; /* Cor da linha */
+}
+
+footer p:nth-child(4), /* Nome do Arquiteto */
+footer p:nth-child(5) {
+  /* CAU/SP */
+  text-align: center;
+  margin-bottom: 0.1cm;
+  color: #222; /* Cor do texto */
+}
+
+/* Estilos para os botões "Gerar PDF" e "Enviar Email" */
+body > button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #4caf50; /* Um verde um pouco mais vibrante para "Gerar PDF" */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+body > button:hover {
+  background-color: #45a049;
+}
+
+body > button:last-of-type {
+  background-color: #2196f3; /* Um azul mais claro para "Enviar Email" */
+}
+
+body > button:last-of-type:hover {
+  background-color: #0b7dda;
+}
+
+/* --- ESTILOS PARA RESPONSIVIDADE (Telas Menores) --- */
+
+/* Ajustes para telas com largura máxima de 768px (tablets em retrato e celulares) */
+@media (max-width: 768px) {
+  body {
+    margin: 0; /* Remove margens do body para aproveitar espaço */
+  }
+
+  .report-header,
+  section,
+  footer {
+    width: 100%; /* Ocupa a largura total da tela */
+    margin: 1cm auto; /* Margem superior/inferior reduzida, centralizado */
+    padding: 0.2cm; /* Padding interno reduzido para telas menores */
+    box-shadow: none; /* Opcional: remover sombra para um look mais clean em mobile */
+    min-height: auto; /* Deixa a altura fluir naturalmente com o conteúdo */
+  }
+
+  /* Faixas de cabeçalho e rodapé em telas menores */
+  .page-header-strip,
+  .page-footer-strip {
+    height: auto; /* Altura automática para o conteúdo se ajustar */
+    padding: 10px 15px; /* Padding interno para o texto/logos */
+    flex-direction: column; /* Coloca os itens em coluna */
+    align-items: flex-start; /* Alinha itens à esquerda */
+    position: relative; /* Remove o absolute para não sobrepor */
+  }
+
+  .logo-left,
+  .logo-right {
+    text-align: left; /* Alinha logos à esquerda */
+    width: 100%; /* Ocupa toda a largura disponível */
+    margin-bottom: 5px; /* Pequeno espaçamento entre os logos */
+  }
+
+  .logo-right {
+    margin-top: 5px; /* Espaçamento entre logos */
+  }
+
+  .page-number {
+    position: static; /* Volta para a posição normal do fluxo */
+    margin-top: 10px; /* Espaçamento após o conteúdo da faixa */
+    width: 100%;
+    text-align: right; /* Mantém o número à direita */
+  }
+
+  /* Ajuste para títulos em telas menores */
+  h1 {
+    font-size: 1.8em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h3 {
+    font-size: 1.2em;
+  }
+  p,
+  li {
+    /* font-size: 0.9em !important; */
+    font-size: 0.55rem !important;
+  } /* Reduzir um pouco o tamanho do texto */
+
+  ol {
+    padding-left: 0.2cm;
+  }
+
+  /* GALERIA DE IMAGENS: Uma imagem por linha em telas menores */
+  .report-image-gallery {
+    flex-direction: column; /* Coloca as imagens em uma única coluna */
+    gap: 1cm; /* Reduz o espaçamento entre as imagens empilhadas */
+  }
+
+  .report-image-gallery .report-figure {
+    width: 100%; /* Faz com que cada imagem ocupe 100% da largura disponível */
+  }
+
+  /* Esconde o input de arquivo "Escolher Ficheiro" */
+  .image-container input[type="file"] {
+    display: none;
+  }
+
+  /* O botão "Trocar Imagem" pode precisar de um ajuste de largura para mobile */
+  .change-image-button {
+    width: 80%; /* Ou 100% */
+    margin: 10px auto; /* Centraliza */
+  }
+}
+
+/* --- FIM DOS ESTILOS DE RESPONSIVIDADE --- */
+
+/* ... (seu bloco @media print inalterado) ... */
+
+/* Estilos para as quebras de página na impressão */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .report-header,
+  section,
+  footer {
+    width: 21cm;
+    /* min-height: 29.7cm;  <-- MANTIDO AQUI: A altura fixa para impressão */
+    /* height: 95vh; */
+    margin: 0;
+    padding: 2.5cm; /* Reset o padding para ser o padding padrão da página impressa */
+    box-shadow: none;
+    page-break-after: always; /* Força uma nova página após cada seção */
+    /* Ajustes de padding para a impressão, para que o conteúdo não seja coberto pelas faixas */
+    padding-top: calc(
+      2.5cm + 1.5cm
+    ); /* Padding original + altura da faixa superior */
+    padding-bottom: 5.5cm; /* Padding original (2.5cm) + altura da faixa inferior (1.5cm) + 1.5cm de buffer */
+    padding-left: 2.5cm;
+    padding-right: 2.5cm;
+  }
+
+  /* Faixa superior com logos para impressão */
+  .page-header-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5cm; /* Altura da faixa superior */
+    background-color: var(--header-red);
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.5cm;
+    box-sizing: border-box;
+  }
+
+  /* Faixa azul inferior com numeração para impressão */
+  .page-footer-strip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5cm; /* Altura da faixa inferior */
+    background-color: var(--footer-blue);
+    z-index: 1;
+    display: flex; /* Para centralizar o número da página */
+    justify-content: flex-end; /* ALINHA O CONTEÚDO À DIREITA */
+    align-items: center; /* Centraliza verticalmente */
+    padding-right: 2.5cm; /* ADICIONA ESPAÇAMENTO À DIREITA */
+    box-sizing: border-box; /* Inclui padding na largura total */
+  }
+
+  .page-number {
+    color: #fff; /* Cor do número da página (branco) */
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  /* Ajustes de padding para a impressão, para que o conteúdo não seja coberto pelas faixas */
+  .report-header,
+  section,
+  footer {
+    /* padding-top: calc(
+      2.5cm + 1.5cm
+    );  Padding original + altura da faixa superior */
+    padding-bottom: calc(
+      2.5cm + 1.5cm
+    ); /* Padding original + altura da faixa inferior */
+    padding-left: 2.5cm;
+    padding-right: 2.5cm;
+  }
+
+  section {
+    padding-top: 3rem;
+  }
+
+  /* Oculta os botões na impressão */
+  button {
+    display: none !important;
+  }
+
+  /* Oculta os inputs de file na impressão */
+  input[type="file"] {
+    display: none !important;
+  }
+
+  /* Estilo para o `ajuste` quebra de página */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Estilo para elementos contenteditable (opcional, para esconder a borda de edição) */
+  [contenteditable="true"] {
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Adicionar estas regras, se ainda não as tiver ou ajustar */
+  /* Garante que elementos de bloco importantes não sejam quebrados internamente */
+  p,
+    h1, h2, h3, h4, h5, h6,
+    ul, ol, li,
+    table, thead, tbody, tr, th, td,
+    img,picture,
+    .report-figure, /* Garante que toda a figura com imagem e legenda não quebre */
+    .report-image-gallery /* Garante que a galeria de imagens não quebre no meio */ {
+    page-break-inside: avoid;
+  }
+
+  /* Regra para forçar quebra ANTES de títulos importantes, se eles caírem muito no final da página */
+  /* Use com moderação, pois pode criar espaços em branco */
+  h2 {
+    page-break-before: auto; /* Pode ser 'avoid' ou 'always' dependendo do seu layout desejado */
+    page-break-after: avoid; /* Evita que o título fique isolado ao final da página */
+  }
+
+  /* Opcional: Para controlar melhor tabelas grandes, se ainda estiverem cortando */
+  table {
+    page-break-before: auto; /* Pode ser 'avoid' ou 'always' */
+    page-break-after: auto; /* Pode ser 'avoid' ou 'always' */
+    /* Se uma tabela for muito alta, ela pode ser o problema.
+           Considerar reduzir seu tamanho, ou ter certeza que ela tem thead para repetição */
+  }
+
+  /* .pag4 {
+    bottom: -1rem !important;
+    background-color: #222;
+  } */
+
+  /* .pag5 {
+    bottom: 12rem;
+  }
+  .pag6 {
+    bottom: -2rem;
+    z-index: 100;
+  } */
+}
+
+/* Estilo para os elementos contenteditable (visível apenas na tela) */
+[contenteditable="true"] {
+  border: 1px dashed #ccc; /* Borda tracejada para indicar que é editável */
+  /*padding: 5px;  Um pequeno preenchimento */
+  min-height: 1em; /* Garante altura mínima para linhas vazias */
+}
+
+[contenteditable="true"]:focus {
+  border-color: #007bff; /* Borda azul ao focar */
+  outline: none;
+}
+
+/* Oculta o input de arquivo "Escolher Ficheiro" */
+.image-container input[type="file"] {
+  display: none;
+}
+
+figcaption {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.h95 {
+  height: 95vh;
+}
