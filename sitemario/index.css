@@ -470,6 +470,11 @@ body > button:last-of-type:hover {
 
 /* Estilos para as quebras de página na impressão */
 @media print {
+  /* Esconde a modal de alerta na impressão */
+  .modal {
+    display: none !important;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -637,4 +642,104 @@ figcaption {
 
 .h95 {
   height: 95vh;
+}
+
+/* Estilos da Modal */
+.modal {
+  display: none; /* Escondido por padrão */
+  position: fixed; /* Fixado na tela */
+  z-index: 1000; /* Acima de todo o conteúdo */
+  left: 0;
+  top: 0;
+  width: 100%; /* Largura total */
+  height: 100%; /* Altura total */
+  overflow: auto; /* Habilita rolagem se o conteúdo for muito grande */
+  background-color: rgba(0, 0, 0, 0.7); /* Fundo preto semi-transparente */
+  display: flex; /* Para centralizar o conteúdo */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* Centraliza vertical e horizontalmente */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Largura padrão para desktops */
+  max-width: 500px; /* Largura máxima para desktops */
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative; /* Para o botão de fechar */
+  text-align: center;
+}
+
+.modal-content h2 {
+  color: #a00; /* Cor do seu header-red */
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.close-button {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: #000;
+  text-decoration: none;
+}
+
+.modal-print-button {
+  background-color: #4caf50; /* Cor similar ao seu botão Gerar PDF */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 15px;
+}
+
+.modal-print-button:hover {
+  background-color: #45a049;
+}
+
+/* Ajustes para Celulares (responsividade) */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Mais largura em telas menores */
+    padding: 15px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .modal-content p {
+    font-size: 0.8rem;
+  }
+
+  .modal-print-button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+
+  .close-button {
+    font-size: 24px;
+    top: 8px;
+    right: 12px;
+  }
 }
