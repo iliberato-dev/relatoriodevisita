@@ -1,130 +1,184 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Lógica para numeração de páginas
-  const pageContainers = document.querySelectorAll('.report-header, section, footer');
-  let pageNum = 1;
+document.addEventListener("DOMContentLoaded", function () {
+  // --- Lógica para salvar/carregar TEXTO e IMAGENS ---
 
-  pageContainers.forEach(container => {
-      const pageNumberDiv = container.querySelector('.page-number');
-      if (pageNumberDiv) {
-          pageNumberDiv.textContent = pageNum;
-          pageNum++;
+  // Prefixo para as chaves no localStorage
+  const STORAGE_PREFIX_TEXT = "report_content_text_";
+  const STORAGE_PREFIX_IMAGE = "report_content_image_";
+
+  // 1. Identificar e preparar elementos editáveis de TEXTO
+  const editableTextElements = document.querySelectorAll(
+    '[contenteditable="true"]'
+  );
+  editableTextElements.forEach((element, index) => {
+    const key = element.id || `data-persist-text-${index}`;
+    element.dataset.persistId = key; // Armazena a chave no data-attribute
+  });
+
+  // 2. Carregar TEXTO ao carregar a página
+  editableTextElements.forEach((element) => {
+    const key = element.dataset.persistId;
+    const savedContent = localStorage.getItem(STORAGE_PREFIX_TEXT + key);
+    if (savedContent !== null) {
+      element.innerHTML = savedContent;
+    }
+  });
+
+  // 3. Salvar TEXTO em tempo real (evento 'input')
+  editableTextElements.forEach((element) => {
+    element.addEventListener("input", function () {
+      const key = this.dataset.persistId;
+      localStorage.setItem(STORAGE_PREFIX_TEXT + key, this.innerHTML);
+    });
+  });
+
+  // --- Lógica para salvar/carregar IMAGENS ---
+
+  // Selecionar todos os inputs de arquivo para troca de imagem
+  const imageInputElements = document.querySelectorAll(
+    'input[type="file"][data-target]'
+  );
+
+  // Selecionar todos os elementos <img> que podem ter suas fontes trocadas
+  const imageElements = document.querySelectorAll("img[id]");
+
+  // 4. Carregar IMAGENS ao carregar a página
+  imageElements.forEach((img) => {
+    const imageId = img.id;
+    const savedImageData = localStorage.getItem(STORAGE_PREFIX_IMAGE + imageId);
+    if (savedImageData) {
+      img.src = savedImageData; // Define a imagem com a Data URL salva
+    }
+  });
+
+  // 5. Salvar IMAGENS quando um novo arquivo é selecionado
+  imageInputElements.forEach((input) => {
+    input.addEventListener("change", function (event) {
+      const targetImageId = this.dataset.target; // Pega o ID da imagem alvo do atributo data-target
+      const targetImage = document.getElementById(targetImageId);
+
+      if (event.target.files && event.target.files[0] && targetImage) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          targetImage.src = e.target.result; // Atualiza a imagem na página
+          // Salva a imagem como Data URL no localStorage
+          localStorage.setItem(
+            STORAGE_PREFIX_IMAGE + targetImageId,
+            e.target.result
+          );
+        };
+        reader.readAsDataURL(event.target.files[0]); // Lê o arquivo como Data URL
       }
+    });
   });
 
-  // Lógica para manipulação de imagens (baseada no seu código)
-  // Remove o uso de imageGallery, pois não está presente no HTML fornecido anteriormente
-  const changeImageButtons = document.querySelectorAll('.change-image-button');
-
-  changeImageButtons.forEach(button => {
-      button.addEventListener('click', () => {
-          const targetId = button.dataset.target;
-          const inputElement = document.querySelector(`input[data-target="${targetId}"]`);
-          if (inputElement) { // Verifica se o inputElement existe
-              inputElement.click(); // Dispara a seleção de arquivo
-          }
-      });
-  });
-
-  document.body.addEventListener('change', (event) => {
-      const inputElement = event.target;
-      if (inputElement.tagName === 'INPUT' && inputElement.type === 'file' && inputElement.dataset.target && inputElement.files && inputElement.files[0]) {
-          const targetImageId = inputElement.dataset.target;
-          const imgElement = document.getElementById(targetImageId);
-          const file = inputElement.files[0];
-          const reader = new FileReader();
-
-          reader.onload = (e) => {
-              if (imgElement) { // Verifica se o imgElement existe
-                  imgElement.src = e.target.result;
-              }
-          }
-          reader.readAsDataURL(file);
+  // 6. Ativar o input de arquivo quando o botão 'Trocar Imagem' é clicado
+  const changeImageButtons = document.querySelectorAll(".change-image-button");
+  changeImageButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const targetImageId = this.dataset.target;
+      // Encontra o input de arquivo que tem o mesmo data-target
+      const fileInput = document.querySelector(
+        `input[type="file"][data-target="${targetImageId}"]`
+      );
+      if (fileInput) {
+        fileInput.click(); // Simula um clique no input de arquivo, abrindo a janela de seleção
       }
+    });
   });
 
-  // Lógica para tornar elementos contenteditable (se ainda desejar)
-  document.querySelectorAll('[contenteditable="true"]').forEach(element => {
-      element.addEventListener('focus', function() {
-          // Opcional: Adicionar classe para destacar o elemento em edição
-          // this.classList.add('editing');
-      });
-      element.addEventListener('blur', function() {
-          // Opcional: Remover classe de destaque
-          // this.classList.remove('editing');
-      });
-  });
-});
+  // --- Lógica do Modal de Alerta e Impressão (Mantida e ajustada) ---
 
-// Funções de impressão e envio de e-mail (baseadas no seu código)
-function printToPDF() {
-  window.print();
-}
+  // Referências aos elementos da modal
+  const printToPDFButton = document.getElementById("printToPDFButton"); // Alterado para ID
+  const sendEmailButton = document.getElementById("sendEmailButton"); // Alterado para ID
+  const modal = document.getElementById("printAlertModal");
+  const closeButton = document.querySelector(".close-button");
+  const modalPrintButton = document.querySelector(".modal-print-button");
 
-function sendEmail() {
-  // Esta é uma simplificação e tem limitações!
-  // Para uma solução mais robusta, você precisaria de um backend.
-  const subject = encodeURIComponent("Relatório AVCB");
-  const body = encodeURIComponent("Por favor, encontre o relatório em anexo.");
-  const mailtoLink = `mailto:isaque.cedesp@gmail.com?subject=${subject}&body=${body}`; // Substitua com seu e-mail (ou deixe em branco)
-  window.location.href = mailtoLink;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const printButton = document.getElementById('printButton');
-  const modal = document.getElementById('printAlertModal');
-  const closeButton = document.querySelector('.close-button');
-  const modalPrintButton = document.querySelector('.modal-print-button');
-
-  // --- Funções para controlar a Modal ---
   function openModal() {
-      modal.style.display = 'flex'; // Abre a modal
+    modal.style.display = "flex";
+    // Mostra o botão só quando abrir o modal
+    const modalPrintButton = document.querySelector(".modal-print-button");
+    if (modalPrintButton) modalPrintButton.style.display = "inline-block";
   }
 
   function closeModal() {
-      modal.style.display = 'none'; // Fecha a modal
+    modal.style.display = "none";
   }
 
-  // --- Event Listeners ---
-
-  // 1. Abre a modal quando o botão "Gerar PDF / Imprimir" é clicado
-  if (printButton) {
-      printButton.addEventListener('click', openModal);
+  // Abre a modal quando o botão "Gerar PDF" é clicado
+  if (printToPDFButton) {
+    printToPDFButton.addEventListener("click", openModal);
   }
 
-  // 2. Tenta abrir a modal antes de qualquer tentativa de impressão (incluindo Ctrl+P)
-  // ATENÇÃO: O comportamento pode variar entre navegadores. Teste!
-  window.addEventListener('beforeprint', function() {
-      // Se a modal já não estiver visível, mostre-a.
-      // Isso evita que ela reapareça se o usuário já a tiver aberto pelo botão.
-      if (modal.style.display !== 'flex') {
-          openModal();
-          // É CRÍTICO *não* chamar window.print() aqui diretamente,
-          // pois o fluxo de impressão já foi iniciado.
-          // O usuário deve fechar a modal manualmente ou clicar no botão "Entendi".
-      }
+  // Tenta abrir a modal antes de qualquer tentativa de impressão (incluindo Ctrl+P)
+  window.addEventListener("beforeprint", function () {
+    if (modal.style.display !== "flex") {
+      openModal();
+    }
   });
 
-  // 3. Fecha a modal quando o botão de fechar (x) é clicado
+  // Fecha a modal quando o botão de fechar (x) é clicado
   if (closeButton) {
-      closeButton.addEventListener('click', closeModal);
+    closeButton.addEventListener("click", closeModal);
   }
 
-  // 4. Fecha a modal e inicia a impressão quando o botão "Entendi, Gerar Impressão" é clicado
+  // Fecha a modal e inicia a impressão quando o botão "Entendi, Gerar Impressão" é clicado
   if (modalPrintButton) {
-      modalPrintButton.addEventListener('click', function() {
-          closeModal(); // Esconde a modal imediatamente
-          // Adicione um pequeno atraso para dar tempo ao navegador de renderizar
-          // o fechamento da modal antes de abrir o diálogo de impressão.
-          setTimeout(function() {
-              window.print();
-          }, 100); // 100 milissegundos de atraso
-      });
+    modalPrintButton.addEventListener("click", function () {
+      closeModal();
+      // Pequeno atraso para o navegador processar o fechamento do modal antes de abrir o diálogo de impressão
+      setTimeout(function () {
+        window.print();
+      }, 100);
+    });
   }
 
-  // 5. Fecha a modal se o usuário clicar fora do conteúdo da modal
-  window.addEventListener('click', function(event) {
-      if (event.target == modal) {
-          closeModal();
-      }
+  // Fecha a modal se o usuário clicar fora do conteúdo da modal
+  window.addEventListener("click", function (event) {
+    if (event.target == modal) {
+      closeModal();
+    }
+  });
+
+  // Adicionado lógica para o botão "Enviar Email" (se necessário)
+  if (sendEmailButton) {
+    sendEmailButton.addEventListener("click", function () {
+      alert("Funcionalidade de Enviar Email ainda não implementada.");
+      // Aqui você pode adicionar lógica para coletar o conteúdo e enviá-lo
+    });
+  }
+
+  // Função printToPDF original se ainda for necessária para chamadas diretas
+  window.printToPDF = function () {
+    // Agora, este botão primeiro abre o modal
+    openModal();
+  };
+
+  // Função sendEmail original se ainda for necessária para chamadas diretas
+  window.sendEmail = function () {
+    if (sendEmailButton) {
+      sendEmailButton.click(); // Simula o clique no botão para disparar o alerta
+    } else {
+      alert("Funcionalidade de Enviar Email ainda não implementada.");
+    }
+  };
+
+  // Função para numerar as páginas
+  function numerarPaginas() {
+    const pageNumbers = document.querySelectorAll(".page-number");
+    pageNumbers.forEach((div, index) => {
+      div.textContent = (index + 1).toString().padStart(2, "0");
+    });
+  }
+
+  // Chama a função quando a página carrega
+  numerarPaginas();
+
+  // Chama a função novamente se houver alterações no DOM
+  const observer = new MutationObserver(numerarPaginas);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
   });
 });
