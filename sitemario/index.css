@@ -48,6 +48,7 @@ footer {
 /* Faixa vermelha no topo de cada página */
 .page-header-strip {
   position: absolute;
+  padding: 0.5rem;
   top: 0;
   left: 0;
   width: 100%;
@@ -55,34 +56,24 @@ footer {
   background-color: var(--header-red);
   z-index: 2; /* Garante que fique acima do conteúdo */
   display: flex; /* Para alinhar os logos lado a lado */
-  justify-content: space-between; /* Espaço entre os logos */
+  justify-content: center; /* Espaço entre os logos */
   align-items: center; /* Centraliza verticalmente os logos */
-  padding: 0 2.5cm; /* Padding lateral para os logos, igual à margem do conteúdo */
   box-sizing: border-box; /* Inclui padding na largura total */
+  column-gap: 6rem;
+  height: 5rem;
 }
 
 .logo-left,
 .logo-right {
   display: flex;
-  align-items: center;
-  font-size: 10pt; /* Tamanho da fonte dos logos */
-  font-weight: bold;
-  color: #fff; /* Cor do texto dos logos, branco para contrastar com o vermelho */
-}
-
-.logo-claro {
-  color: #fff; /* Cor branca para o "Claro-" na faixa vermelha */
-  margin-right: 2px;
-}
-
-.logo-mais-solucoes {
-  color: #fff; /* Cor branca para "mais SOLUÇÕES" na faixa vermelha */
+  align-items: center; /* Centraliza verticalmente os logos */
+  height: 0.5rem;
 }
 
 /* Se usar imagens de logo, ajuste o tamanho aqui */
 .logo-left img,
 .logo-right img {
-  height: 1cm; /* Ajuste a altura do logo conforme necessário */
+  height: 1.3cm; /* Ajuste a altura do logo conforme necessário */
   width: auto;
 }
 
@@ -92,20 +83,21 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 1.5cm; /* Altura da faixa inferior */
+  height: 1.5cm;
   background-color: var(--footer-blue);
-  z-index: 1; /* Garante que fique acima do conteúdo */
-  display: flex; /* Para centralizar o número da página */
-  justify-content: flex-end; /* ALINHA O CONTEÚDO À DIREITA */
-  align-items: center; /* Centraliza verticalmente */
-  padding-right: 2.5cm; /* ADICIONA ESPAÇAMENTO À DIREITA, IGUAL À MARGEM DO CONTEÚDO */
-  box-sizing: border-box; /* Inclui padding na largura total */
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 0.5cm;
+  box-sizing: border-box;
 }
 
 .page-number {
   color: #fff; /* Cor do número da página (branco para contrastar com o azul) */
   font-size: 12pt;
   font-weight: bold;
+  padding-right: 1rem;
 }
 
 /* Ajustes de padding para que o conteúdo não seja coberto pelas faixas */
@@ -398,21 +390,17 @@ body > button:last-of-type:hover {
   .page-header-strip,
   .page-footer-strip {
     height: auto; /* Altura automática para o conteúdo se ajustar */
-    padding: 10px 15px; /* Padding interno para o texto/logos */
-    flex-direction: column; /* Coloca os itens em coluna */
-    align-items: flex-start; /* Alinha itens à esquerda */
+    /* padding: 10px 15px;  Padding interno para o texto/logos */
+    /*flex-direction: column;  Coloca os itens em coluna */
+    /*align-items: flex-start;  Alinha itens à esquerda */
     position: relative; /* Remove o absolute para não sobrepor */
   }
 
   .logo-left,
   .logo-right {
     text-align: left; /* Alinha logos à esquerda */
-    width: 100%; /* Ocupa toda a largura disponível */
-    margin-bottom: 5px; /* Pequeno espaçamento entre os logos */
-  }
-
-  .logo-right {
-    margin-top: 5px; /* Espaçamento entre logos */
+    /*width: 100%;  Ocupa toda a largura disponível */
+    /*margin-bottom: 5px;  Pequeno espaçamento entre os logos */
   }
 
   .page-number {
@@ -512,7 +500,7 @@ body > button:last-of-type:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2.5cm;
+    padding: 0 0.5cm;
     box-sizing: border-box;
   }
 
@@ -703,43 +691,106 @@ figcaption {
 }
 
 .modal-print-button {
-  background-color: #4caf50; /* Cor similar ao seu botão Gerar PDF */
-  color: white;
-  padding: 10px 20px;
+  display: none;
+  background-color: #4caf50;
+  color: #fff;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  padding: 10px 24px;
   font-size: 1rem;
-  margin-top: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.2s;
 }
 
+.modal-print-button:active,
+.modal-print-button:focus,
 .modal-print-button:hover {
-  background-color: #45a049;
+  background-color: #388e3c;
+  color: #fff;
+  outline: none;
 }
 
-/* Ajustes para Celulares (responsividade) */
-@media (max-width: 600px) {
-  .modal-content {
-    width: 95%; /* Mais largura em telas menores */
-    padding: 15px;
+/* Estilos para o Sumário */
+.summary-section {
+  padding: 4rem 2rem 2rem;
+}
+
+.summary-title {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 2rem;
+  text-align: left;
+  width: 100%;
+}
+
+.summary-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary-item {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+  font-size: 11pt;
+  width: 100%;
+}
+
+.summary-text {
+  white-space: nowrap;
+  padding-right: 0.5rem;
+  min-width: fit-content;
+}
+
+.summary-dots {
+  border-bottom: 1px dotted #000;
+  margin: 0 0.5rem;
+  flex: 1;
+  height: 1px;
+  margin-bottom: 0.3rem;
+}
+
+.summary-page {
+  white-space: nowrap;
+  padding-left: 0.5rem;
+  min-width: 2rem;
+  text-align: right;
+}
+
+/* Estilo para subitens */
+.summary-list ul {
+  list-style: none;
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.summary-list ul .summary-item {
+  font-size: 10pt;
+  margin-bottom: 0.6rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .summary-section {
+    padding: 4rem 1rem 2rem;
   }
 
-  .modal-content h2 {
-    font-size: 1.3rem;
+  .summary-item {
+    font-size: 10pt;
   }
 
-  .modal-content p {
-    font-size: 0.8rem;
+  .summary-list ul .summary-item {
+    font-size: 9pt;
   }
 
-  .modal-print-button {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-  }
-
-  .close-button {
-    font-size: 24px;
-    top: 8px;
-    right: 12px;
+  .summary-list ul {
+    padding-left: 1rem;
   }
 }
