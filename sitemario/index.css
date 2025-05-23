@@ -390,7 +390,7 @@ body > button:last-of-type:hover {
   /* Faixas de cabeçalho e rodapé em telas menores */
   .page-header-strip,
   .page-footer-strip {
-    height: auto; /* Altura automática para o conteúdo se ajustar */
+   /* height: auto;  Altura automática para o conteúdo se ajustar */
     /* padding: 10px 15px;  Padding interno para o texto/logos */
     /*flex-direction: column;  Coloca os itens em coluna */
     /*align-items: flex-start;  Alinha itens à esquerda */
